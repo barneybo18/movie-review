@@ -1,9 +1,12 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import { useEffect, useState } from 'react'
 import Search from './components/Search.jsx'
 import Spinner from './components/Spinner.jsx'
 import MovieCard from './components/MovieCard.jsx'
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './appwrite.js'
+import MovieDetailsPage from './components/MovieDetails.jsx';
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -86,6 +89,9 @@ const App = () => {
   }, []);
 
   return (
+    <Router>
+      <Routes>
+      <Route path="/" element={
     <main>
       <div className="pattern"/>
 
@@ -128,7 +134,11 @@ const App = () => {
           )}
         </section>
       </div>
-    </main>
+    </main> } />
+
+    <Route path="/movie/:id" element={<MovieDetailsPage />} />
+    </Routes>
+    </Router>
   )
 }
 
