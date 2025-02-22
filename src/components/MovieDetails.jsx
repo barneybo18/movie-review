@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { MessageCircle, Star, Clock, Calendar, Globe, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ChatBox from './ChatBox';
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
@@ -41,20 +42,20 @@ const MovieDetailsPage = () => {
     fetchMovieDetails();
   }, [id]);
 
-  const handleSubmitMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
+  // const handleSubmitMessage = (e) => {
+  //   e.preventDefault();
+  //   if (!newMessage.trim()) return;
 
-    const message = {
-      id: Date.now(),
-      text: newMessage,
-      timestamp: new Date().toISOString(),
-      user: 'User'
-    };
+  //   const message = {
+  //     id: Date.now(),
+  //     text: newMessage,
+  //     timestamp: new Date().toISOString(),
+  //     user: 'User'
+  //   };
 
-    setMessages([...messages, message]);
-    setNewMessage('');
-  };
+  //   setMessages([...messages, message]);
+  //   setNewMessage('');
+  // };
 
   if (isLoading) {
     return (
@@ -91,7 +92,7 @@ const MovieDetailsPage = () => {
             <img 
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               alt={movie.title}
-              className="w-48 md:w-64 rounded-lg shadow-xl"
+              className="w-48 md:w-44 rounded-lg shadow-xl"
             />
             <div className="flex-1 text-center md:text-left">
               <h1 className="text-2xl md:text-4xl font-bold mb-4">{movie.title}</h1>
@@ -138,47 +139,7 @@ const MovieDetailsPage = () => {
       </div>
 
       {/* Chat Section */}
-      <div className="container mx-auto px-4 py-6 md:py-8">
-        <div className="bg-gray-800 rounded-lg p-4 md:p-6">
-          <div className="flex items-center gap-2 mb-4 md:mb-6">
-            <MessageCircle className="text-blue-400 w-5 h-5 md:w-6 md:h-6" />
-            <h2 className="text-xl md:text-2xl font-semibold">Discussion</h2>
-          </div>
-
-          <div className="space-y-3 md:space-y-4 mb-4 md:mb-6 max-h-[300px] md:max-h-[400px] overflow-y-auto">
-            {messages.map(message => (
-              <div key={message.id} className="bg-gray-700 rounded-lg p-3 md:p-4">
-                <div className="flex justify-between items-start mb-1 md:mb-2">
-                  <span className="font-semibold text-sm md:text-base">{message.user}</span>
-                  <span className="text-xs md:text-sm text-gray-400">
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-                <p className="text-gray-300 text-sm md:text-base">{message.text}</p>
-              </div>
-            ))}
-            {messages.length === 0 && (
-              <p className="text-gray-400 text-center text-sm md:text-base">No messages yet. Start the discussion!</p>
-            )}
-          </div>
-
-          <form onSubmit={handleSubmitMessage} className="flex gap-2 md:gap-4">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Share your thoughts..."
-              className="flex-1 bg-gray-700 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 px-4 md:px-6 py-2 rounded-lg transition text-sm md:text-base whitespace-nowrap"
-            >
-              Send
-            </button>
-          </form>
-        </div>
-      </div>
+      <ChatBox movie={{ $id: id }} /> 
     </div>
   );
 };

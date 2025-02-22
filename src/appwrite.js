@@ -3,6 +3,7 @@ import { Client, Databases, ID, Query } from 'appwrite'
 const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
+const CHATS_ID = import.meta.env.VITE_CHATS_COLLECTION_ID;
 
 const client = new Client()
   .setEndpoint('https://cloud.appwrite.io/v1')
@@ -50,3 +51,46 @@ export const getTrendingMovies = async () => {
   console.error(error);
  }
 }
+
+export const createChatMessage = async (clerkUserId, userName, message, movieId) => {
+  try {
+    if (!movieId || !clerkUserId || !message) {
+      throw new Error('Missing required parameters');
+    }
+    
+    const response = await database.createDocument(
+      DATABASE_ID,
+      CHATS_ID,
+      ID.unique(),
+      {
+        clerkUserId,
+        userName,
+        message,
+        movieId: String(movieId),  // Ensure movieId is a string
+        timestamp: new Date().toISOString(),
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error('Error creating chat message:', error);
+    throw error;
+  }
+};
+
+export const getMovieChatHistory = async (movieId) => {
+  try {
+    if (!movieId) {
+      throw new Error('Movie ID is required');
+    }
+
+    const response = await database.listDocuments(
+      DATABASE_ID,
+      CHATS_ID,
+      [Query.equal('movieId', String(movieId)), Query.orderAsc('timestamp')]
+    );
+    return response.documents;
+  } catch (error) {
+    console.error('Error fetching movie chat history:', error);
+    throw error;
+  }
+};
