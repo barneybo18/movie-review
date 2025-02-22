@@ -1,11 +1,19 @@
 // components/ClerkAuth.jsx
-import { SignedIn, SignedOut, SignIn, SignInButton, SignUp, UserButton, useUser } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignIn, SignUp, UserButton } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthButtons = () => {
+  const navigate = useNavigate();
+
   return (
     <div className='relative flex justify-center gap-2'>
-    <SignedOut>
-        <SignInButton className="text-white  bg-dark-100 rounded-full p-3 cursor-pointer" />
+      <SignedOut>
+        <button 
+          onClick={() => navigate('/sign-in')}
+          className="text-white bg-dark-100 rounded-full p-3 cursor-pointer"
+        >
+          Sign In
+        </button>
       </SignedOut>
       <SignedIn>
         <UserButton />
@@ -14,6 +22,8 @@ export const AuthButtons = () => {
     </div>
   );
 };
+
+// Rest of your code remains the same...
 
 export const SignInPage = () => {
   return (
